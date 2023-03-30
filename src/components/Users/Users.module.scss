@@ -11,11 +11,15 @@
   gap: 20px;
 
   @media screen and (min-width: 768px) {
-    grid-template-columns: repeat(2, 344px);
+    grid-template-columns: repeat(2, 1fr);
     gap: 16px;
   }
   @media screen and (min-width: 1024px) {
-    grid-template-columns: repeat(3, 282px);
+    grid-template-columns: repeat(3, 1fr);
+    gap: 29px;
+  }
+  @media screen and (min-width: 1170px) {
+    grid-template-columns: repeat(3, 1fr);
     gap: 29px;
   }
 }

@@ -1,6 +1,5 @@
 :root {
   --primary-color: #f4e041;
-  --secondary-color: #00bdd3;
   --black: rgba(0, 0, 0, 0.87);
   --bg-color: #f8f8f8;
   --desktop-lg: 1170px;
@@ -30,12 +29,15 @@ body {
 
   @media screen and (min-width: 768px) {
     max-width: var(--tablet);
+    padding: 0 32px;
   }
   @media screen and (min-width: 1024px) {
     max-width: var(--desktop);
+    padding: 0 60px;
   }
   @media screen and (min-width: 1170px) {
     max-width: var(--desktop-lg);
+    padding: 0;
   }
 }
 

@@ -4,9 +4,9 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { schema } from './schema'
 import { IFormInputs, IPosition } from '../../types'
 import { formSubmit, getPositions } from '../../api/api'
+import { Loader } from '../Loader/Loader'
 import success from '../../assets/success.png'
 import s from './Form.module.scss'
-import { Loader } from '../Loader/Loader'
 
 interface FormProps {
   isRegisterSuccess: boolean
@@ -161,7 +161,7 @@ export const Form: FC<FormProps> = ({ isRegisterSuccess, setIsRegisterSuccess })
           style={isRegisterSuccess ? {} : { display: 'none' }}
         >
           <p className={s.registerSuccess}>User successfully registered</p>
-          <img src={success} alt='A woman with a laptop successfully sent a file' />
+          <img src={success} alt='A woman with a laptop successfully sent a file' loading='lazy' />
         </div>
       </div>
     </section>

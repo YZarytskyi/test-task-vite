@@ -3,9 +3,9 @@ import { Tooltip } from 'react-tooltip'
 import { getUsers } from '../../api/api'
 import { IUser } from '../../types'
 import { numberTransform } from '../../utils/formatNumber'
+import { Loader } from '../Loader/Loader'
 import 'react-tooltip/dist/react-tooltip.css'
 import s from './Users.module.scss'
-import { Loader } from '../Loader/Loader'
 
 interface UsersProps {
   isRegisterSuccess: boolean
@@ -62,6 +62,7 @@ export const Users: FC<UsersProps> = ({ isRegisterSuccess }) => {
                 className={s.userImage}
                 width={70}
                 height={70}
+                loading='lazy'
               />
               <p
                 className={s.userName}
