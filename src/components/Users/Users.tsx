@@ -6,6 +6,7 @@ import { numberTransform } from '../../utils/formatNumber'
 import { Loader } from '../Loader/Loader'
 import 'react-tooltip/dist/react-tooltip.css'
 import s from './Users.module.scss'
+import { handleImageError } from '../../utils/imageErrorHandler'
 
 interface UsersProps {
   isRegisterSuccess: boolean
@@ -62,6 +63,7 @@ export const Users: FC<UsersProps> = ({ isRegisterSuccess }) => {
                 className={s.userImage}
                 width={70}
                 height={70}
+                onError={handleImageError}
                 loading='lazy'
               />
               <p
