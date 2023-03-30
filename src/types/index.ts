@@ -37,5 +37,26 @@ export interface IFormInputs {
   email: string
   phone: string
   position_id: string
-  photo: string
+  photo: FileList
 }
+
+export interface TokenResponse {
+  success: boolean
+  token: string
+}
+
+interface SignUpResponseSuccess {
+  success: boolean
+  user_id: number
+  message: 'New user successfully registered'
+}
+
+type Fails = Partial<Record<keyof IFormInputs, string[]>>
+
+interface SignUpResponseError {
+  success: boolean
+  message: string
+  fails?: Fails
+}
+
+export type SignUpResponse = SignUpResponseSuccess | SignUpResponseError

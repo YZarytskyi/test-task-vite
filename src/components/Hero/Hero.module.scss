@@ -26,10 +26,7 @@
 }
 
 .heading {
-  margin-bottom: 21px;
-  font-weight: 400;
-  font-size: 40px;
-  line-height: 1;
+  margin-bottom: 21px !important;
   color: #ffffff;
 
   @media screen and (min-width: 768px) {

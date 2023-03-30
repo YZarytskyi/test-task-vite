@@ -3,14 +3,6 @@
   padding-bottom: 70px;
 }
 
-.heading {
-  margin-bottom: 50px;
-  text-align: center;
-  font-weight: 400;
-  font-size: 40px;
-  line-height: 1;
-}
-
 .usersList {
   margin-bottom: 50px;
   display: grid;
@@ -19,11 +11,11 @@
   gap: 20px;
 
   @media screen and (min-width: 768px) {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, 344px);
     gap: 16px;
   }
   @media screen and (min-width: 1024px) {
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(3, 282px);
     gap: 29px;
   }
 }
@@ -43,6 +35,16 @@
   object-fit: cover;
 }
 
+.userEmail,
+.userPhone,
+.userName,
+.userPosition {
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 .userName {
   margin-bottom: 20px;
 }
@@ -50,4 +52,10 @@
 .showMoreBtn {
   display: block;
   margin: 0 auto;
+}
+
+.tooltip_styles {
+  background-color: var(--black);
+  padding: 3px 16px;
+  border-radius: 4px;
 }

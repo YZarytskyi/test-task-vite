@@ -1,16 +1,24 @@
-import { ChangeEventHandler, useEffect, useState } from 'react'
-import { getPositions } from '../../api/positionsApi'
-import { IFormInputs, IPosition } from '../../types'
+import { ChangeEventHandler, Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { schema } from './schema'
+import { IFormInputs, IPosition } from '../../types'
+import { formSubmit, getPositions } from '../../api/api'
+import success from '../../assets/success.png'
 import s from './Form.module.scss'
+import { Loader } from '../Loader/Loader'
+
+interface FormProps {
+  isRegisterSuccess: boolean
+  setIsRegisterSuccess: Dispatch<SetStateAction<boolean>>
+}
 
 const INPUT_FILE_PLACEHOLDER = 'Upload your photo'
 
-export const Form = () => {
-  const [file, setFile] = useState<string | null>(null)
+export const Form: FC<FormProps> = ({ isRegisterSuccess, setIsRegisterSuccess }) => {
+  const [fileName, setFileName] = useState<string | null>(null)
   const [positions, setPositions] = useState<IPosition[]>([])
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     const fetchPositions = async () => {
@@ -31,27 +39,44 @@ export const Form = () => {
     formState: { isDirty, isValid, errors },
   } = useForm<IFormInputs>({ resolver: yupResolver(schema), mode: 'onChange' })
 
-  const onSubmit = (data: IFormInputs) => {
-    console.log(data)
-    reset()
-    setFile(null)
+  const onSubmit = async (data: IFormInputs) => {
+    try {
+      setIsLoading(true)
+      const formData = new FormData()
+      formData.append('photo', data.photo[0])
+      Object.entries(data).forEach(([key, value]) => {
+        formData.append(key, value)
+      })
+      await formSubmit(formData)
+      setIsRegisterSuccess(true)
+      reset()
+      setFileName(null)
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const onUploadFile: ChangeEventHandler<HTMLInputElement> = (e) => {
     const files = e.target.files
     if (!files || !files.length) {
-      setFile(null)
+      setFileName(null)
       return
     }
-    setFile(files[0].name)
+    setFileName(files[0].name)
+    setTimeout(() => {
+      e.target.blur()
+    }, 10)
   }
 
-  const fileName = file && file.length > 30 ? file.slice(0, 30) + '...' : file
+  const fileNameFormatted =
+    fileName && fileName.length > 30 ? fileName.slice(0, 30) + '...' : fileName
 
   return (
-    <section className={s.formSection}>
+    <section id='signUp' className={s.formSection}>
       <div className={`container ${s.container}`}>
-        <h2 className={s.heading}>Working with POST request</h2>
+        <h2 className='subTitle'>Working with POST request</h2>
         <form className={s.form} onSubmit={handleSubmit(onSubmit)}>
           <label className={`${s.inputLabel} ${errors.name ? s.inputLabelError : ''}`}>
             <input
@@ -91,24 +116,25 @@ export const Form = () => {
             </p>
           </label>
 
-          <p className={s.radioLabel}>Select your position</p>
-          {positions?.map((position, index) => (
-            <div key={position.id} className={s.radioContainer}>
-              <input
-                type='radio'
-                defaultChecked={index === 0}
-                id={position.name}
-                value={position.id}
-                {...register('position_id')}
-              />
-              <label htmlFor={position.name}>{position.name}</label>
-            </div>
-          ))}
+          <fieldset className={s.fieldset}>
+            <legend className={s.radioLabel}>Select your position</legend>
+            {positions?.map((position, index) => (
+              <label key={position.id} className={s.radioContainer}>
+                <input
+                  type='radio'
+                  defaultChecked={index === 0}
+                  value={position.id}
+                  {...register('position_id')}
+                />
+                <span>{position.name}</span>
+              </label>
+            ))}
+          </fieldset>
 
           <label className={`${s.photoLabel} ${errors.photo ? s.photoLabelError : ''}`}>
             <input
               type='file'
-              className={`${s.photoInput} ${errors.photo ? s.photoInputError : ''}`}
+              className={s.photoInput}
               {...register('photo')}
               onChange={onUploadFile}
               accept='image/jpeg'
@@ -116,9 +142,9 @@ export const Form = () => {
             <p className={s.upload}>Upload</p>
             <p
               className={s.photoName}
-              style={file !== INPUT_FILE_PLACEHOLDER ? { color: 'rgba(0, 0, 0, 0.87)' } : {}}
+              style={fileName !== INPUT_FILE_PLACEHOLDER ? { color: 'rgba(0, 0, 0, 0.87)' } : {}}
             >
-              {file ? fileName : INPUT_FILE_PLACEHOLDER}
+              {fileName ? fileNameFormatted : INPUT_FILE_PLACEHOLDER}
             </p>
             <p className={s.error}>{errors.photo?.message}</p>
           </label>
@@ -127,6 +153,16 @@ export const Form = () => {
             Sign Up
           </button>
         </form>
+
+        {isLoading && <Loader />}
+
+        <div
+          className={s.registerSuccessContainer}
+          style={isRegisterSuccess ? {} : { display: 'none' }}
+        >
+          <p className={s.registerSuccess}>User successfully registered</p>
+          <img src={success} alt='A woman with a laptop successfully sent a file' />
+        </div>
       </div>
     </section>
   )
